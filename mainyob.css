@@ -1,0 +1,96 @@
+body {
+    background-color: #F6F6F6;
+    margin: 0px;
+}
+
+header {
+    background-color: white; border:1px solid black;
+    padding: 1%;
+    margin-top: 2px;
+}
+
+.globalFlex {
+    display: flex;
+    justify-content: space-between;
+}
+
+.postContainer {
+    margin-top: 75px;
+
+}
+
+.post {
+    background-color: white; border:1px solid black;
+    margin: 15px;
+    padding: 1%;
+    width: 650px;
+    height: fit-content;
+    
+}
+
+.postTitle {
+    margin: 15px;
+    padding: 1%;
+}
+
+.postDate {
+    margin: 15px;
+    padding: 1%;
+}
+
+.postText {
+    margin: 15px;
+    padding: 1%;
+}
+
+.submitContainer {
+    display: block;
+    margin-top: 55px;
+    margin-bottom: 30px;
+    margin-right: 30px;
+    padding: 1%;
+}
+
+.submiTitleContainer {
+    margin: 0px;
+    padding: 0%;
+    width: 300px;
+    height: 45px;
+}
+
+.titleHead {
+    margin: 0px;
+    padding: 0%;
+}
+
+.titleSubmit{
+    margin-top: 10px;
+    padding: 0%;
+    width: 300px;
+}
+
+
+.submitPostContainer{
+    margin-top: 40px;
+    padding: 0%;
+    width: 300px;
+    height: 45px;
+}
+
+.postHead {
+    margin: 0px;
+    padding: 0%;
+}
+
+.postSubmit {
+    margin-top: 10px;
+    padding: 0%;
+    width: 300px;
+    height: 150px;
+}
+
+.submitButton{
+    margin: 0px;
+    padding: 0%;
+    margin-top: 160px;
+}
