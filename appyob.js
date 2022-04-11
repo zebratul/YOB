@@ -3,36 +3,11 @@ const content = document.querySelector('input[name=content]'); //инпут по
 const postContainer = document.querySelector('.postContainer'); //общий контейнер куда будем добавлять посты
 document.querySelector('button').addEventListener('click', createPost);
 
-function createPost() { //очень тупой способ который каждый шаг делает вручную
+function createPost() { //более модный способ через вставку HTML
     if (checkInput()) {
-    const newSection = document.createElement("section"); //создаем новую секцию под пост
-    newSection.classList.toggle('post');
-
-    const newH = document.createElement("h1"); //создаем новый тайтл
-    newH.classList.toggle('postTitle');
-    newH.innerText = title.value.trim().replace("<", "&lt;").replace(">", "&gt;"); //очень базовый санитайзер хрени которую можно написать в инпут. Хотя вроде и без неё тэги не считываются?
-
-    const date = new Date().toLocaleString(); //создаем новое время
-    const newDate = document.createElement("p");
-    newDate.classList.toggle('postDate');
-    newDate.innerText = date;
-
-    const newP = document.createElement("p");  //создаем новый пост
-    newP.classList.toggle('postText');
-    newP.innerText = content.value.trim().replace("<", "&lt;").replace(">", "&gt;"); //очень базовый санитайзер хрени которую можно написать в инпут. Хотя вроде и без неё тэги не считываются?
-
-    title.value = "";
-    content.value = ""; //обнуляем поля
-
-    // postContainer.insertAdjacentElement("beforeend", newSection); //собираем всё вместе в конец ленты. Эта хрень работает
-    // newSection.insertAdjacentElement("beforeend", newH);
-    // newSection.insertAdjacentElement("beforeend", newDate);
-    // newSection.insertAdjacentElement("beforeend", newP);
-
-    postContainer.appendChild(newSection); //собираем всё вместе в конец ленты. Эта хрень тоже работает
-    newSection.appendChild(newH);
-    newSection.appendChild(newDate);
-    newSection.appendChild(newP);
+        const date = new Date().toLocaleString(); //создаем новое время
+        const post = `<section class="post"> <h1 class="postTitle">${title.value.trim().replaceAll("<", "&lt;").replaceAll(">", "&gt;")}</h1> <p class="postDate">${date}</p> <p class="postText">${content.value.trim().replaceAll("<", "&lt;").replaceAll(">", "&gt;")}</p> </section>`;  //создаём наш пост с небольшим санитайзом (замена кавычек html-тэгов на энтети)
+        postContainer.insertAdjacentHTML("beforeend", post);
     }
 };
 
@@ -56,10 +31,3 @@ function checkInput() { //проверка на ошибки с выводом �
         alert(err);
     }
 };
-
-//     if (_.inRange(title.value.trim().length, 1, 96) && _.inRange(content.value.trim().length, 1, 250)) { //"быстрый" способ проверки без отдельных кейсов ошибки.
-//         return true;
-//     } else {
-//         alert('ошибка');
-//     }
-// };
