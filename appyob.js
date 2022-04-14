@@ -3,23 +3,21 @@ const content = document.querySelector('input[name=content]'); //инпут по
 const postContainer = document.querySelector('.postContainer'); //общий контейнер куда будем добавлять посты
 document.querySelector('.submitButton').addEventListener('click', createPost);
 document.querySelector('.loadJSON').addEventListener('click', loadPost);
-document.addEventListener("DOMContentLoaded", showPosts);
+document.addEventListener("DOMContentLoaded", showPosts); //загружаем и отображаем посты при загрузке 
 
 async function getUserAccs() {  //загрузка юзеров
     const response = await fetch(`https://jsonplaceholder.typicode.com/users`);
     const userData = await response.json();
-    console.log('user array from async', userData);
     return userData;
 }
 
 async function getPosts() {  //загрузка постов
     const response = await fetch(`https://jsonplaceholder.typicode.com/posts/`);
     const postData = await response.json();
-    console.log('post array from async', postData);
     return postData;
 }
 
-function showPosts() {                                   //загрузка постов через .then; Ждём посты + аккаунты через promise.all
+function showPosts() {                                   //отображение постов через .then; Ждём посты + аккаунты через promise.all
     Promise.all([getPosts(), getUserAccs()])
     .then(values => {
         const [posts, users] = values;
@@ -72,14 +70,21 @@ function checkInput() { //проверка на ошибки с выводом �
     }
 }
 
-function loadPost() { //загрузка рандомного поста на страницу 
-    fetch(`https://jsonplaceholder.typicode.com/posts/${randomIntFromInterval(1,100)}`)
-        .then(response => response.json())
-        .then(obj => {
-            title.value = obj.title
-            content.value = obj.body
-        })
-        .then(createPost)
+function loadPost() {                                   //загрузка рандомного поста на страницу. 
+    Promise.all([getPosts(), getUserAccs()])
+    .then(values => {
+        const [posts, users] = values;
+        let i = randomIntFromInterval(1,100);
+        title.value = posts[i].title;
+        content.value = posts[i].body;
+        let feId = posts[i].userId;
+        createPost(users.find(obj => obj.id === feId).username); //отображаем пост из общего массива, передавая в функцию юзернейм автора. При этом заголовок и текст поста сохраняются в инпуты напрямую сейчас и забираются оттуда createPost-ом. 
+        }                                                        //По хорошему нужно запрашивать с сервера 1 рандомный пост через `https://jsonplaceholder.typicode.com/posts/${randomIntFromInterval(1, 100)}`, но это нужно делать отдельную функцию запроса, влом
+    )
+    .finally(clear => {
+        title.value = '';
+        content.value = ''; //очищаем последние заполненные подгрузкой поля за собой, чтобы туда можно было вручную что-то забить
+    })
 }
 
 function randomIntFromInterval(min, max) { // min and max included 
