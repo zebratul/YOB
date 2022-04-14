@@ -18,10 +18,15 @@ header {
     margin-top: 75px;
 
 }
+.dateIDContainer {
+    column-count: 2;
+    margin: 15px;
+    padding: 1%;
+}
 
 .post {
     background-color: white; border:1px solid black;
-    margin: 15px;
+    margin: 45px;
     padding: 1%;
     width: 650px;
     height: fit-content;
@@ -34,13 +39,18 @@ header {
 }
 
 .postDate {
-    margin: 15px;
-    padding: 1%;
+    margin: 0px;
+    padding: 0%;
 }
 
 .postText {
     margin: 15px;
     padding: 1%;
+}
+
+.username {
+    margin: 0px;
+    padding: 0%;
 }
 
 .submitContainer {
@@ -90,6 +100,12 @@ header {
 }
 
 .submitButton{
+    margin: 0px;
+    padding: 0%;
+    margin-top: 160px;
+}
+
+.loadJSON{
     margin: 0px;
     padding: 0%;
     margin-top: 160px;
