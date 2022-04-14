@@ -1,23 +1,43 @@
+const defaultUser = {  //этот юзер должен храниться на сервере и ауторизироваться через логин/пароль. На данный момент не могу такое сделать, поэтому он просто сохранён объектом по аналогии данных с сервака 
+    id:	101,
+    name:	"Test User",
+    username:	"Tuser",
+    email:	"test@er.us",
+    address:{
+        street:	"Test",
+        suite:	"Apt. 112",
+        city:	"Testborough",
+        zipcode:	"92998-3874",
+        geo:{
+            lat:	"-34.3159", 
+            lng:	"82.1496"}},
+    phone: "1-555-555-5555 x56442",
+    website: "testing.org",
+    company:{	
+        name:	"test inc.",
+        catchPhrase:	"catchphrase!",
+        bs:	"test"}
+};
 const title = document.querySelector('input[name=title]'); //инпут заголовка
 const content = document.querySelector('input[name=content]'); //инпут поста
 const postContainer = document.querySelector('.postContainer'); //общий контейнер куда будем добавлять посты
-document.querySelector('.submitButton').addEventListener('click', createPost);
-document.querySelector('.loadJSON').addEventListener('click', loadPost);
-document.addEventListener("DOMContentLoaded", showPosts); //загружаем и отображаем посты при загрузке 
+document.querySelector('.submitButton').addEventListener('click', submitPost); //добавляем пост с инпута юзера на сервер и на сайт
+document.querySelector('.loadJSON').addEventListener('click', loadPost); //загружаем рандомный  пост с сервера
+document.addEventListener("DOMContentLoaded", showPosts); //загружаем и отображаем все посты при загрузке страницы
 
-async function getUserAccs() {  //загрузка юзеров
+async function getUserAccs() {  //загрузка листа юзеров
     const response = await fetch(`https://jsonplaceholder.typicode.com/users`);
     const userData = await response.json();
     return userData;
 }
 
-async function getPosts() {  //загрузка постов
+async function getPosts() {  //загрузка листа постов
     const response = await fetch(`https://jsonplaceholder.typicode.com/posts/`);
     const postData = await response.json();
     return postData;
 }
 
-function showPosts() {                                   //отображение постов через .then; Ждём посты + аккаунты через promise.all
+function showPosts() {                                   //загрузка и отображение постов через .then; Ждём посты + аккаунты через promise.all
     Promise.all([getPosts(), getUserAccs()])
     .then(values => {
         const [posts, users] = values;
@@ -34,7 +54,23 @@ function showPosts() {                                   //отображени�
     })
 }
 
-function createPost(username = 'Default User') { //более модный способ создания постов через вставку HTML. 
+async function submitPost() {    //пытаемся передать пост серверу. Если успех, добавляем на страницу. 
+    try {
+        const upload = await fetch(`https://jsonplaceholder.typicode.com/posts/`,{
+            method: 'POST',
+            body: JSON.stringify({userId: defaultUser.id, id: 101, title: `${title.value}`, body: `${content.value}`}),
+        })
+        if (upload.ok) {
+            createPost(defaultUser.username)
+        } else {
+            throw new Error ('Failed to upload') //в случае провала ожидаю ошибку, не тестил 
+        }}
+    catch (error) {
+        console.log(error.message);
+    }
+}
+
+function createPost(username) { //более модный способ создания постов через вставку HTML. 
     if (checkInput()) {
         const date = new Date().toLocaleString(); //создаем новое время
         const post = `<section class="post">
@@ -90,3 +126,4 @@ function loadPost() {                                   //загрузка ра�
 function randomIntFromInterval(min, max) { // min and max included 
     return Math.floor(Math.random() * (max - min + 1) + min)
   }
+
