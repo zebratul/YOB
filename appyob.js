@@ -3,11 +3,19 @@ const content = document.querySelector('input[name=content]'); //инпут по
 const postContainer = document.querySelector('.postContainer'); //общий контейнер куда будем добавлять посты
 document.querySelector('.submitButton').addEventListener('click', createPost);
 document.querySelector('.loadJSON').addEventListener('click', loadPost);
+document.addEventListener("DOMContentLoaded", showPosts);
 
-function createPost() { //более модный способ через вставку HTML
+function createPost(userId) { //более модный способ через вставку HTML
     if (checkInput()) {
         const date = new Date().toLocaleString(); //создаем новое время
-        const post = `<section class="post"> <h1 class="postTitle">${title.value.trim().replaceAll("<", "&lt;").replaceAll(">", "&gt;")}</h1> <p class="postDate">${date}</p> <p class="postText">${content.value.trim().replaceAll("<", "&lt;").replaceAll(">", "&gt;")}</p> </section>`;  //создаём наш пост с небольшим санитайзом (замена кавычек html-тэгов на энтети)
+        const post = `<section class="post">
+        <h1 class="postTitle">${title.value.trim().replaceAll("<", "&lt;").replaceAll(">", "&gt;")}</h1>
+        <div class="dateIDContainer">
+        <p class="postDate">${date}</p>
+        <p class="username">by: ${names[userId-1]}</p>
+        </div>
+        <p class="postText">${content.value.trim().replaceAll("<", "&lt;").replaceAll(">", "&gt;")}</p>
+        </section>`;  //создаём наш пост с небольшим санитайзом (замена кавычек html-тэгов на энтети)
         postContainer.insertAdjacentHTML("beforeend", post);
     }
 }
@@ -20,6 +28,22 @@ function loadPost() {
             content.value = obj.body
         })
         .then(createPost)
+}
+
+function showPosts() {
+    fetch(`https://jsonplaceholder.typicode.com/posts/`)
+        .then(response => response.json())
+        .then(collection => {
+            collection.forEach(obj => {
+                title.value = obj.title;
+                content.value = obj.body;
+                createPost(obj.userId);
+            })
+        })
+        .finally(clear => {                
+            title.value = '';
+            content.value = '';
+        })
 }
 
 function checkInput() { //проверка на ошибки с выводом сообщений путём конкатенации строки 
@@ -47,4 +71,5 @@ function randomIntFromInterval(min, max) { // min and max included
     return Math.floor(Math.random() * (max - min + 1) + min)
   }
 
+const names = ['Silencer', 'Lone Druid', 'Ancient Apparition', 'Batrider', 'Slark', 'Sniper', 'Lifestealer', 'Grimstroke', 'Elder Titan', 'Dark Seer']
 
