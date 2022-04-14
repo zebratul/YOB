@@ -30,20 +30,32 @@ function loadPost() {
         .then(createPost)
 }
 
-function showPosts() {
-    fetch(`https://jsonplaceholder.typicode.com/posts/`)
-        .then(response => response.json())
-        .then(collection => {
-            collection.forEach(obj => {
-                title.value = obj.title;
-                content.value = obj.body;
-                createPost(obj.userId);
-            })
-        })
-        .finally(clear => {                
-            title.value = '';
-            content.value = '';
-        })
+// function showPosts() {                                   //загрузка через .then
+//     fetch(`https://jsonplaceholder.typicode.com/posts/`)
+//         .then(response => response.json())
+//         .then(collection => {
+//             collection.forEach(obj => {
+//                 title.value = obj.title;
+//                 content.value = obj.body;
+//                 createPost(obj.userId);
+//             })
+//         })
+//         .finally(clear => {                
+//             title.value = '';
+//             content.value = '';
+//         })
+// }  
+
+async function showPosts() {  //загрузка через async функцию, мне больше нравится
+    const postList = await fetch(`https://jsonplaceholder.typicode.com/posts/`);
+    const postArray = await postList.json();
+    postArray.forEach(obj => {
+        title.value = obj.title;
+        content.value = obj.body;
+        createPost(obj.userId);
+    })
+    title.value = '';
+    content.value = '';
 }
 
 function checkInput() { //проверка на ошибки с выводом сообщений путём конкатенации строки 
